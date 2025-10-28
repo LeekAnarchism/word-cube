@@ -59,13 +59,53 @@ function initCube() {
                 }
             });
             
-            // Handle backspace to go to previous cell
+            // Handle keyboard navigation
             input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && !e.target.value && i > 0) {
-                    const prevInput = gridContainer.querySelector(`input[data-index="${i - 1}"]`);
-                    if (prevInput) {
-                        prevInput.focus();
-                        prevInput.select();
+                const row = Math.floor(i / 5);
+                const col = i % 5;
+                let targetIndex = null;
+                
+                switch(e.key) {
+                    case 'ArrowUp':
+                        if (row > 0) {
+                            targetIndex = i - 5;
+                        }
+                        e.preventDefault();
+                        break;
+                    case 'ArrowDown':
+                        if (row < 4) {
+                            targetIndex = i + 5;
+                        }
+                        e.preventDefault();
+                        break;
+                    case 'ArrowLeft':
+                        if (col > 0) {
+                            targetIndex = i - 1;
+                        }
+                        e.preventDefault();
+                        break;
+                    case 'ArrowRight':
+                        if (col < 4) {
+                            targetIndex = i + 1;
+                        }
+                        e.preventDefault();
+                        break;
+                    case 'Backspace':
+                        if (!e.target.value && i > 0) {
+                            const prevInput = gridContainer.querySelector(`input[data-index="${i - 1}"]`);
+                            if (prevInput) {
+                                prevInput.focus();
+                                prevInput.select();
+                            }
+                        }
+                        break;
+                }
+                
+                if (targetIndex !== null) {
+                    const targetInput = gridContainer.querySelector(`input[data-index="${targetIndex}"]`);
+                    if (targetInput) {
+                        targetInput.focus();
+                        targetInput.select();
                     }
                 }
             });
