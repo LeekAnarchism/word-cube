@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Letter Cube</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>3D Letter Cube</h1>
+        
+        <div class="cube-container">
+            <div class="scene">
+                <div class="cube" id="cube">
+                    <div class="cube-face front" data-face="front"></div>
+                    <div class="cube-face back" data-face="back"></div>
+                    <div class="cube-face right" data-face="right"></div>
+                    <div class="cube-face left" data-face="left"></div>
+                    <div class="cube-face top" data-face="top"></div>
+                    <div class="cube-face bottom" data-face="bottom"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <h2>Customize Letters</h2>
+            <p class="instructions">Enter 25 letters for each face (spaces will be preserved)</p>
+            
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="front-input">Front Face</label>
+                    <input type="text" id="front-input" maxlength="25" placeholder="Enter 25 letters">
+                </div>
+                
+                <div class="input-group">
+                    <label for="back-input">Back Face</label>
+                    <input type="text" id="back-input" maxlength="25" placeholder="Enter 25 letters">
+                </div>
+                
+                <div class="input-group">
+                    <label for="right-input">Right Face</label>
+                    <input type="text" id="right-input" maxlength="25" placeholder="Enter 25 letters">
+                </div>
+                
+                <div class="input-group">
+                    <label for="left-input">Left Face</label>
+                    <input type="text" id="left-input" maxlength="25" placeholder="Enter 25 letters">
+                </div>
+                
+                <div class="input-group">
+                    <label for="top-input">Top Face</label>
+                    <input type="text" id="top-input" maxlength="25" placeholder="Enter 25 letters">
+                </div>
+                
+                <div class="input-group">
+                    <label for="bottom-input">Bottom Face</label>
+                    <input type="text" id="bottom-input" maxlength="25" placeholder="Enter 25 letters">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="apply-btn" class="btn btn-primary">Apply Changes</button>
+                <button id="share-btn" class="btn btn-secondary">Copy Share Link</button>
+                <button id="reset-btn" class="btn btn-tertiary">Reset to Default</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
