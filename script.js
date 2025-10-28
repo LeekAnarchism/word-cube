@@ -41,6 +41,11 @@ function initCube() {
     updateCubeRotation();
 }
 
+// Helper function to split string into array of grapheme clusters (handles emojis correctly)
+function getGraphemes(str) {
+    return Array.from(str);
+}
+
 // Load letters from query parameters
 function loadFromQueryParams() {
     const params = new URLSearchParams(window.location.search);
@@ -48,7 +53,7 @@ function loadFromQueryParams() {
     
     Object.keys(DEFAULT_LETTERS).forEach(face => {
         const paramValue = params.get(face);
-        if (paramValue && paramValue.length === 25) {
+        if (paramValue && getGraphemes(paramValue).length === 25) {
             letters[face] = paramValue;
         } else {
             letters[face] = DEFAULT_LETTERS[face];
@@ -76,12 +81,19 @@ function renderCube(letters) {
         const faceElement = document.querySelector(`[data-face="${face}"]`);
         faceElement.innerHTML = '';
         
-        const faceLetters = letters[face].padEnd(25, ' ');
+        // Split into grapheme clusters to handle emojis correctly
+        const graphemes = getGraphemes(letters[face]);
         
+        // Pad with spaces if less than 25
+        while (graphemes.length < 25) {
+            graphemes.push(' ');
+        }
+        
+        // Only use first 25 graphemes
         for (let i = 0; i < 25; i++) {
             const cell = document.createElement('div');
             cell.className = 'letter-cell';
-            cell.textContent = faceLetters[i];
+            cell.textContent = graphemes[i] || ' ';
             faceElement.appendChild(cell);
         }
     });
@@ -152,12 +164,16 @@ document.getElementById('apply-btn').addEventListener('click', () => {
     
     Object.keys(inputs).forEach(face => {
         let value = inputs[face].value;
-        // Pad with spaces if less than 25 characters
-        if (value.length < 25) {
-            value = value.padEnd(25, ' ');
+        // Split into grapheme clusters to handle emojis
+        const graphemes = getGraphemes(value);
+        
+        // Pad with spaces if less than 25 graphemes
+        while (graphemes.length < 25) {
+            graphemes.push(' ');
         }
-        // Truncate if more than 25 characters (shouldn't happen with maxlength)
-        letters[face] = value.substring(0, 25);
+        
+        // Only take first 25 graphemes and join back to string
+        letters[face] = graphemes.slice(0, 25).join('');
     });
     
     renderCube(letters);
