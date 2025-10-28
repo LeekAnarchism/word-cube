@@ -15,23 +15,64 @@ let rotation = { x: -20, y: 20 };
 
 // Get DOM elements
 const cube = document.getElementById('cube');
-const inputs = {
-    front: document.getElementById('front-input'),
-    back: document.getElementById('back-input'),
-    right: document.getElementById('right-input'),
-    left: document.getElementById('left-input'),
-    top: document.getElementById('top-input'),
-    bottom: document.getElementById('bottom-input')
-};
+const inputGrids = {};
 
 // Initialize the cube
 function initCube() {
     // Load letters from query parameters or use defaults
     const letters = loadFromQueryParams();
     
-    // Update input fields
-    Object.keys(inputs).forEach(face => {
-        inputs[face].value = letters[face];
+    // Create input grids for each face
+    const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+    faces.forEach(face => {
+        const gridContainer = document.querySelector(`.grid-input[data-face="${face}"]`);
+        inputGrids[face] = [];
+        
+        const graphemes = getGraphemes(letters[face]);
+        
+        for (let i = 0; i < 25; i++) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'grid-cell';
+            input.maxLength = 2; // Allow for emojis
+            input.value = graphemes[i] || ' ';
+            input.dataset.index = i;
+            input.dataset.face = face;
+            
+            // Select all content when focused
+            input.addEventListener('focus', (e) => {
+                e.target.select();
+            });
+            
+            // Auto-advance to next cell on input
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                const chars = getGraphemes(value);
+                if (chars.length > 1) {
+                    e.target.value = chars[0];
+                }
+                
+                // Auto-advance to next cell
+                if (e.target.value && i < 24) {
+                    const nextInput = gridContainer.querySelector(`input[data-index="${i + 1}"]`);
+                    if (nextInput) nextInput.focus();
+                }
+            });
+            
+            // Handle backspace to go to previous cell
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && i > 0) {
+                    const prevInput = gridContainer.querySelector(`input[data-index="${i - 1}"]`);
+                    if (prevInput) {
+                        prevInput.focus();
+                        prevInput.select();
+                    }
+                }
+            });
+            
+            gridContainer.appendChild(input);
+            inputGrids[face].push(input);
+        }
     });
     
     // Render the cube
@@ -162,18 +203,15 @@ document.addEventListener('touchend', () => {
 document.getElementById('apply-btn').addEventListener('click', () => {
     const letters = {};
     
-    Object.keys(inputs).forEach(face => {
-        let value = inputs[face].value;
-        // Split into grapheme clusters to handle emojis
-        const graphemes = getGraphemes(value);
+    Object.keys(inputGrids).forEach(face => {
+        const graphemes = [];
+        inputGrids[face].forEach(input => {
+            const value = input.value || ' ';
+            const chars = getGraphemes(value);
+            graphemes.push(chars[0] || ' ');
+        });
         
-        // Pad with spaces if less than 25 graphemes
-        while (graphemes.length < 25) {
-            graphemes.push(' ');
-        }
-        
-        // Only take first 25 graphemes and join back to string
-        letters[face] = graphemes.slice(0, 25).join('');
+        letters[face] = graphemes.join('');
     });
     
     renderCube(letters);
@@ -206,8 +244,11 @@ document.getElementById('share-btn').addEventListener('click', () => {
 
 // Reset button handler
 document.getElementById('reset-btn').addEventListener('click', () => {
-    Object.keys(inputs).forEach(face => {
-        inputs[face].value = DEFAULT_LETTERS[face];
+    Object.keys(inputGrids).forEach(face => {
+        const graphemes = getGraphemes(DEFAULT_LETTERS[face]);
+        inputGrids[face].forEach((input, i) => {
+            input.value = graphemes[i] || ' ';
+        });
     });
     
     renderCube(DEFAULT_LETTERS);

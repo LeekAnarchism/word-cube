@@ -52,6 +52,10 @@ h2 {
     transform-style: preserve-3d;
     transition: transform 0.1s;
     cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .cube:active {
@@ -84,6 +88,10 @@ h2 {
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .letter-cell:hover {
@@ -146,19 +154,41 @@ h2 {
     font-size: 0.95rem;
 }
 
-.input-group input {
-    padding: 12px;
-    border: 2px solid #e0e0e0;
+.grid-input {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 4px;
+    padding: 10px;
+    background: #f5f5f5;
     border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    border: 2px solid #e0e0e0;
+}
+
+.grid-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 2px solid #d0d0d0;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    background: white;
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+    cursor: text;
     font-family: monospace;
 }
 
-.input-group input:focus {
+.grid-cell:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background-color: #f0f4ff;
+}
+
+.grid-cell:hover {
+    border-color: #999;
 }
 
 .button-group {
@@ -242,12 +272,21 @@ h2 {
         font-size: 1.2rem;
     }
 
+    .grid-cell {
+        font-size: 1rem;
+    }
+
     h1 {
         font-size: 2rem;
     }
 
     .input-grid {
         grid-template-columns: 1fr;
+    }
+
+    .grid-input {
+        padding: 8px;
+        gap: 3px;
     }
 
     .button-group {
