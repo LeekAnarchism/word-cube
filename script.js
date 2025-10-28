@@ -52,6 +52,9 @@ function initCube() {
                     e.target.value = chars[0];
                 }
                 
+                // Update cube in real-time
+                updateCubeFromInputs();
+                
                 // Auto-advance to next cell
                 if (e.target.value && i < 24) {
                     const nextInput = gridContainer.querySelector(`input[data-index="${i + 1}"]`);
@@ -239,8 +242,8 @@ document.addEventListener('touchend', () => {
     isDragging = false;
 });
 
-// Apply button handler
-document.getElementById('apply-btn').addEventListener('click', () => {
+// Helper function to update cube from current input values
+function updateCubeFromInputs() {
     const letters = {};
     
     Object.keys(inputGrids).forEach(face => {
@@ -256,6 +259,11 @@ document.getElementById('apply-btn').addEventListener('click', () => {
     
     renderCube(letters);
     saveToQueryParams(letters);
+}
+
+// Apply button handler
+document.getElementById('apply-btn').addEventListener('click', () => {
+    updateCubeFromInputs();
     
     // Show feedback
     const btn = document.getElementById('apply-btn');
