@@ -162,25 +162,31 @@ function saveToQueryParams(letters) {
 // Render the cube with letters
 function renderCube(letters) {
     Object.keys(letters).forEach(face => {
-        const faceElement = document.querySelector(`[data-face="${face}"]`);
-        faceElement.innerHTML = '';
-        
-        // Split into grapheme clusters to handle emojis correctly
         const graphemes = getGraphemes(letters[face]);
-        
-        // Pad with spaces if less than 25
+
         while (graphemes.length < 25) {
             graphemes.push(' ');
         }
-        
-        // Only use first 25 graphemes
-        for (let i = 0; i < 25; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'letter-cell';
-            cell.textContent = graphemes[i] || ' ';
-            faceElement.appendChild(cell);
-        }
+
+        const cubeFaceElement = document.querySelector(`.cube-face[data-face="${face}"]`);
+        populateFaceElement(cubeFaceElement, graphemes);
+
+        const netFaceElement = document.querySelector(`.net-face[data-face="${face}"]`);
+        populateFaceElement(netFaceElement, graphemes);
     });
+}
+
+function populateFaceElement(faceElement, graphemes) {
+    if (!faceElement) return;
+
+    faceElement.innerHTML = '';
+
+    for (let i = 0; i < 25; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'letter-cell';
+        cell.textContent = graphemes[i] || ' ';
+        faceElement.appendChild(cell);
+    }
 }
 
 // Update cube rotation
