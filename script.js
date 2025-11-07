@@ -296,6 +296,38 @@ document.getElementById('share-btn').addEventListener('click', () => {
     });
 });
 
+// Generate a random letter
+function getRandomLetter() {
+    return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // A-Z
+}
+
+// Fill empty/whitespace cells with random letters
+function fillEmptyWithRandom() {
+    Object.keys(inputGrids).forEach(face => {
+        inputGrids[face].forEach(input => {
+            const value = input.value.trim();
+            if (!value || value === '') {
+                input.value = getRandomLetter();
+            }
+        });
+    });
+    
+    updateCubeFromInputs();
+}
+
+// Fill random button handler
+document.getElementById('fill-random-btn').addEventListener('click', () => {
+    fillEmptyWithRandom();
+    
+    // Show feedback
+    const btn = document.getElementById('fill-random-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '✓ Filled!';
+    setTimeout(() => {
+        btn.textContent = originalText;
+    }, 1500);
+});
+
 // Reset button handler
 document.getElementById('reset-btn').addEventListener('click', () => {
     Object.keys(inputGrids).forEach(face => {
