@@ -181,11 +181,56 @@ function populateFaceElement(faceElement, graphemes) {
 
     faceElement.innerHTML = '';
 
+    const isCubeFace = faceElement.classList.contains('cube-face');
+    const face = faceElement.dataset.face;
+
     for (let i = 0; i < 25; i++) {
         const cell = document.createElement('div');
         cell.className = 'letter-cell';
         cell.textContent = graphemes[i] || ' ';
+        
+        // Add click handler for cube faces only
+        if (isCubeFace) {
+            cell.dataset.face = face;
+            cell.dataset.index = i;
+            cell.style.cursor = 'pointer';
+            cell.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent cube rotation
+                highlightCorrespondingInput(face, i);
+            });
+            // Also handle touch events for mobile
+            cell.addEventListener('touchend', (e) => {
+                e.stopPropagation(); // Prevent cube rotation
+                highlightCorrespondingInput(face, i);
+                e.preventDefault();
+            });
+        }
+        
         faceElement.appendChild(cell);
+    }
+}
+
+// Highlight the corresponding input cell when a cube cell is clicked
+function highlightCorrespondingInput(face, index) {
+    // Remove previous highlights
+    document.querySelectorAll('.grid-cell.highlighted').forEach(cell => {
+        cell.classList.remove('highlighted');
+    });
+    
+    // Find and highlight the corresponding input
+    const input = document.querySelector(`input[data-face="${face}"][data-index="${index}"]`);
+    if (input) {
+        input.classList.add('highlighted');
+        input.focus();
+        input.select();
+        
+        // Scroll the input into view
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Remove highlight after a delay
+        setTimeout(() => {
+            input.classList.remove('highlighted');
+        }, 2000);
     }
 }
 
@@ -196,6 +241,10 @@ function updateCubeRotation() {
 
 // Mouse drag handlers
 cube.addEventListener('mousedown', (e) => {
+    // Don't start dragging if clicking on a letter cell
+    if (e.target.classList.contains('letter-cell')) {
+        return;
+    }
     isDragging = true;
     previousMousePosition = { x: e.clientX, y: e.clientY };
 });
@@ -222,6 +271,10 @@ document.addEventListener('mouseup', () => {
 let previousTouchPosition = { x: 0, y: 0 };
 
 cube.addEventListener('touchstart', (e) => {
+    // Don't start dragging if touching a letter cell
+    if (e.target.classList.contains('letter-cell')) {
+        return;
+    }
     isDragging = true;
     const touch = e.touches[0];
     previousTouchPosition = { x: touch.clientX, y: touch.clientY };

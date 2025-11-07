@@ -98,6 +98,10 @@ h2 {
     transform: scale(1.1);
 }
 
+.cube-face .letter-cell {
+    cursor: pointer;
+}
+
 .front {
     transform: rotateY(0deg) translateZ(200px);
 }
@@ -268,6 +272,22 @@ h2 {
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     background-color: #f0f4ff;
+}
+
+.grid-cell.highlighted {
+    border-color: #f5576c;
+    box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.3);
+    background-color: #fff0f2;
+    animation: highlightPulse 0.5s ease-in-out;
+}
+
+@keyframes highlightPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .grid-cell:hover {
