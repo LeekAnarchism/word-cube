@@ -328,6 +328,60 @@ document.getElementById('fill-random-btn').addEventListener('click', () => {
     }, 1500);
 });
 
+// Convert all letters to uppercase
+function convertToUppercase() {
+    Object.keys(inputGrids).forEach(face => {
+        inputGrids[face].forEach(input => {
+            const value = input.value.trim();
+            if (value) {
+                input.value = value.toUpperCase();
+            }
+        });
+    });
+    
+    updateCubeFromInputs();
+}
+
+// Convert all letters to lowercase
+function convertToLowercase() {
+    Object.keys(inputGrids).forEach(face => {
+        inputGrids[face].forEach(input => {
+            const value = input.value.trim();
+            if (value) {
+                input.value = value.toLowerCase();
+            }
+        });
+    });
+    
+    updateCubeFromInputs();
+}
+
+// Uppercase button handler
+document.getElementById('uppercase-btn').addEventListener('click', () => {
+    convertToUppercase();
+    
+    // Show feedback
+    const btn = document.getElementById('uppercase-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '✓ Uppercase!';
+    setTimeout(() => {
+        btn.textContent = originalText;
+    }, 1500);
+});
+
+// Lowercase button handler
+document.getElementById('lowercase-btn').addEventListener('click', () => {
+    convertToLowercase();
+    
+    // Show feedback
+    const btn = document.getElementById('lowercase-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '✓ Lowercase!';
+    setTimeout(() => {
+        btn.textContent = originalText;
+    }, 1500);
+});
+
 // Reset button handler
 document.getElementById('reset-btn').addEventListener('click', () => {
     Object.keys(inputGrids).forEach(face => {
